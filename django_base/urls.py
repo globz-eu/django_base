@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from base.views import index, text_display
+from django_base import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
+    url(r'^$', index),
+    url(r'^text-display/(?P<text_id>\d+)', text_display),
     url(r'^admin/', admin.site.urls),
-]
+] + static(settings.STATIC_URL)
