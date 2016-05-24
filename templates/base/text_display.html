@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>text_display</title>
-</head>
-<body>
-    Text:
-    {{ text }}
-</body>
-</html>
+{% extends 'base/base.html' %}
+
+{% block title %}
+    <title>django_base Result</title>
+{% endblock %}
+
+{% block body %}
+    <h1>Result:</h1>
+    <h2>{{ text }}</h2>
+{% endblock %}
