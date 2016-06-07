@@ -4,6 +4,7 @@ from django.http import HttpResponseNotAllowed
 from base.forms import TextForm
 from base.models import Text
 
+
 def index(request):
     """
     Serves home page
@@ -24,6 +25,7 @@ def index(request):
             return render(request, 'base/index.html', {'form': form})
     else:
         return HttpResponseNotAllowed(['POST', 'GET'])
+
 
 def text_display(request, text_id):
     """
