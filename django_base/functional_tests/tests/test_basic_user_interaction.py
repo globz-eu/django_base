@@ -34,7 +34,6 @@ class BasicUserTestCase(StaticLiveServerTestCase):
     def test_user_input(self):
         """
         Tests response on input of some text
-        :return:
         """
         # user navigates to /
         client = requests.session()

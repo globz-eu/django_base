@@ -24,6 +24,7 @@ from base.forms import TextForm
 
 __author__ = 'Stefan Dieterle'
 
+
 class NameFormTest(TestCase):
     def test_form_renders_seq_text_input_widget(self):
         """
