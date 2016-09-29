@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
-from configuration import SECRET_KEY, DEBUG, ALLOWED_HOSTS, DATABASES
+from configuration import SECRET_KEY, DEBUG, ALLOWED_HOSTS, DATABASES, BROKER_URL, CELERY_RESULT_BACKEND
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'base',
     'debug_toolbar',
     'django_nose',
+    'djcelery',
 ]
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
@@ -116,3 +117,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+# Celery configuration
+BROKER_TRANSPORT_OPTIONS = {
+    'fanout_prefix': True,
+    'fanout_patterns': True,
+    'visibility_timeout': 3600
+}
+CELERY_ACCEPT_CONTENT = ['json']
