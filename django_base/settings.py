@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_nose',
     'djcelery',
+    'behave_django',
 ]
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
