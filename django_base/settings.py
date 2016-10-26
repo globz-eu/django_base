@@ -11,18 +11,33 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
-from configuration import SECRET_KEY, DEBUG, ALLOWED_HOSTS, DATABASES, BROKER_URL, CELERY_RESULT_BACKEND
+import json
+from django.core.exceptions import ImproperlyConfigured
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Load settings from json settings file
+with open(os.path.join(BASE_DIR, 'settings.json')) as secrets_file:
+    secrets = json.load(secrets_file)
+
+
+def json_setting(setting, secrets=secrets):
+    """Get secret setting or fail with ImproperlyConfigured"""
+    try:
+        return secrets[setting]
+    except KeyError:
+        raise ImproperlyConfigured("Set the %s setting" % setting)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = json_setting('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = json_setting('DEBUG')
 
 # Application definition
 
@@ -73,6 +88,19 @@ TEMPLATES = [
     },
 ]
 
+DATABASES = {
+    'default': {
+        'ENGINE': json_setting('DB_ENGINE'),
+        'NAME': json_setting('DB_NAME'),
+        'USER': json_setting('DB_USER'),
+        "PASSWORD": json_setting('DB_PASSWORD'),
+        'HOST': json_setting('DB_HOST'),
+        'TEST': {
+            'NAME': json_setting('TEST_DB_NAME'),
+        }
+    }
+}
+
 WSGI_APPLICATION = 'django_base.wsgi.application'
 
 
@@ -117,13 +145,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'templates')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'base/static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+# Access
+ALLOWED_HOSTS = json_setting('ALLOWED_HOSTS')
+
 # Celery configuration
+BROKER_URL = json_setting('BROKER_URL')
 BROKER_TRANSPORT_OPTIONS = {
     'fanout_prefix': True,
     'fanout_patterns': True,
     'visibility_timeout': 3600
 }
+CELERY_RESULT_BACKEND = json_setting('CELERY_RESULT_BACKEND')
 CELERY_ACCEPT_CONTENT = ['json']
